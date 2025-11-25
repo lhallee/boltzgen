@@ -1,3 +1,31 @@
+# Forked from boltzgen repo
+
+
+To test (design 2 potential nipah glycoprotein G binders)
+```
+git clone https://github.com/lhallee/boltzgen.git
+cd boltzgen
+sudo docker build -t boltzgen .
+sudo docker run --user root --rm --gpus all --ipc=host \
+  -v "$PWD:/workdir" \
+  -v "$PWD/cache:/cache" \
+  -v "$PWD/example:/example" \
+  boltzgen run /example/nipah_test/nipah.yaml \
+  --output /workdir/test \
+  --protocol protein-anything \
+  --num_designs 32
+```
+
+If not on linux, add `--use_kernals false`
+
+For example
+```
+docker run --rm --gpus all -v "C:/Users/lhall/Desktop/Research/boltzgen":/workdir -v "C:/Users/lhall/Desktop/Research/boltzgen/cache":/cache -v "C:/Users/lhall/Desktop/Research/boltzgen/example":/example \
+  boltzgen run /example/vanilla_protein/1g13prot.yaml --output /workdir/test \
+  --protocol protein-anything \
+  --num_designs 2 \
+  --use_kernals false
+```
 
 <div align="center">
   <div>&nbsp;</div>
