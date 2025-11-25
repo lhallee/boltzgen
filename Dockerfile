@@ -35,8 +35,9 @@ RUN curl -fsSLO https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYT
 # Location of project code (inside image) – NOT shared with host
 WORKDIR /app
 
-# Copy requirements first for layer caching (matching Modal image order)
-COPY requirements.txt .
+# Copy requirements and project files first for layer caching
+COPY requirements.txt pyproject.toml ./
+COPY src/ ./src/
 
 # Install packages
 # Order is important
@@ -51,7 +52,7 @@ RUN pip install --upgrade pip setuptools && \
     pip install --force-reinstall torch torchvision --index-url https://download.pytorch.org/whl/cu128 -U && \
     pip install --force-reinstall numpy==1.26.4
 
-# Copy the rest of the source
+# Copy the rest of the source (examples, tests, etc.)
 COPY . .
 
 # ──────────────────────────────────────────────────────────────────────────────
