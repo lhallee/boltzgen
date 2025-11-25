@@ -37,7 +37,6 @@ WORKDIR /app
 
 # Copy requirements first for layer caching (matching Modal image order)
 COPY requirements.txt .
-COPY requirements_modal.txt .
 
 # Install packages
 # Order is important
