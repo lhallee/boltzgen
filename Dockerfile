@@ -88,7 +88,7 @@ VOLUME ["/workdir"]
 
 # Set boltzgen as the entrypoint so users can run: docker run boltzgen run config.yaml ...
 # This makes "run config.yaml" become "boltzgen run config.yaml"
-#ENTRYPOINT ["boltzgen"]
+ENTRYPOINT ["boltzgen"]
 
 # Default to showing help if no subcommand is provided
 CMD ["--help"]
