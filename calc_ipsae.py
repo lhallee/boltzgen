@@ -1,14 +1,3 @@
-"""
-Calculate ipSAE scores for final ranked designs and output a ranked FASTA file.
-
-Usage:
-    python calc_ipsae.py <final_ranked_designs_dir> [--pae_cutoff 15] [--dist_cutoff 15]
-    
-Example:
-    python calc_ipsae.py test/final_ranked_designs
-    python calc_ipsae.py output/final_ranked_designs --pae_cutoff 12 --dist_cutoff 12
-"""
-
 import argparse
 import pandas as pd
 import subprocess
@@ -42,22 +31,38 @@ def calculate_ipsae(
     float
         The ipSAE score (lower is better)
     """
-    # Try python first, then py (Windows)
+    # Try different python commands and workdirs
+    # Docker: python + /workdir, Windows: py + .
+    success = False
     for python_cmd in ["python", "py"]:
         for workdir in ["/workdir", "."]:
+            ipsae_script = Path(workdir) / "ipsae.py"
+            if not ipsae_script.exists():
+                continue
             try:
                 command = [
                     python_cmd,
-                    f"{workdir}/ipsae.py",
+                    str(ipsae_script),
                     pae_file_path,
                     structure_file_path,
                     str(pae_cutoff),
                     str(dist_cutoff),
                 ]
                 result = subprocess.run(command, capture_output=True, text=True)
+                if result.returncode == 0:
+                    success = True
+                    break
+                else:
+                    print(f"ipsae.py failed with: {result.stderr}")
             except Exception as e:
-                print(f"Error running ipsae.py for with command: {command}: {e}")
+                print(f"Error running ipsae.py with command: {command}: {e}")
                 continue
+        if success:
+            break
+    
+    if not success:
+        print(f"Failed to run ipsae.py for {structure_file_path}")
+        return float('inf')
 
     # Read results from the output file
     results_path = structure_file_path.replace('.cif', f'_{int(pae_cutoff)}_{int(dist_cutoff)}.txt')

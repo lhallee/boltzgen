@@ -23,7 +23,7 @@ docker run --rm --gpus all -v "C:/Users/lhall/Desktop/Research/boltzgen":/workdi
 For ipsae
 
 ```bash
-sudo docker run --user root --ipc=host -v "$PWD:/workdir" --entrypoint bash python /workdir/calc_ipsae.py final_designs_dir /workdir/test/final_ranked_designs --output /workdir/test/final_ranked_designs/designs_ranked_by_ipsae.fasta
+sudo docker run --user root --ipc=host -v "$PWD:/workdir" --entrypoint bash python /workdir/calc_ipsae.py --final_designs_dir /workdir/test/final_ranked_designs --output /workdir/test/final_ranked_designs/designs_ranked_by_ipsae.fasta
 ```
 
 <div align="center">
