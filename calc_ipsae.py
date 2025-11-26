@@ -378,7 +378,7 @@ def main():
         epilog=__doc__
     )
     parser.add_argument(
-        "output_dir",
+        "--output_dir", "-o",
         type=str,
         nargs='?',
         default=None,
