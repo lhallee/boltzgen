@@ -437,37 +437,22 @@ if boltz1:
     # confidence_AURKA_TPX2_model_0.json
     # pae_AURKA_TPX2_model_0.npz
     # plddt_AURKA_TPX2_model_0.npz
-    #
-    # Note: Boltzgen outputs PAE/pLDDT already at residue level, so we check
-    # if the matrix size matches numres and skip token masking if so.
+    
 
     plddt_file_path=pae_file_path.replace("pae","plddt")
     if os.path.exists(plddt_file_path):
         data_plddt=np.load(plddt_file_path)
         plddt_boltz1=np.array(100.0*data_plddt['plddt'])
-        # Check if plddt is already residue-level (boltzgen) or token-level (standard Boltz1)
-        if len(plddt_boltz1) == numres:
-            # Already residue-level (boltzgen format)
-            plddt = plddt_boltz1
-            cb_plddt = plddt_boltz1
-        else:
-            # Token-level (standard Boltz1 format) - apply mask
-            plddt =    plddt_boltz1[np.ix_(token_array.astype(bool))]
-            cb_plddt = plddt_boltz1[np.ix_(token_array.astype(bool))]
+        plddt =    plddt_boltz1[np.ix_(token_array.astype(bool))]
+        cb_plddt = plddt_boltz1[np.ix_(token_array.astype(bool))]
     else:
-        plddt = np.zeros(numres)
-        cb_plddt = np.zeros(numres)
+        plddt = np.zeros(ntokens)
+        cb_plddt = np.zeros(ntokens)
         
     if os.path.exists(pae_file_path):
         data_pae = np.load(pae_file_path)
         pae_matrix_boltz1=np.array(data_pae['pae'])
-        # Check if PAE is already residue-level (boltzgen) or token-level (standard Boltz1)
-        if pae_matrix_boltz1.shape[0] == numres:
-            # Already residue-level (boltzgen format)
-            pae_matrix = pae_matrix_boltz1
-        else:
-            # Token-level (standard Boltz1 format) - apply mask
-            pae_matrix = pae_matrix_boltz1[np.ix_(token_array.astype(bool), token_array.astype(bool))]
+        pae_matrix = pae_matrix_boltz1[np.ix_(token_array.astype(bool), token_array.astype(bool))]
 
     else:
         print("Boltz1 PAE file does not exist: ", pae_file_path)
