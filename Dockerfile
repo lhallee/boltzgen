@@ -5,7 +5,6 @@
 FROM nvidia/cuda:12.8.0-cudnn-devel-ubuntu24.04
 
 # System prerequisites + Python 3.12
-# Note: Modal uses Python 3.10, but we use 3.12 for better compatibility
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHON_VERSION=3.12.7 \
     PATH=/usr/local/bin:$PATH \
@@ -85,5 +84,5 @@ RUN mkdir -p "${HF_HOME}" && \
 # Declare the volume so other developers know it's intended to persist
 VOLUME ["/workspace"]
 
-# 8️⃣  Default command – override in `docker run … python design_proteins.py`
+# Default command – override in `docker run … python ...`
 CMD ["bash"]

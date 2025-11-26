@@ -49,13 +49,13 @@ USAGE
 ================================================================================
 
 # Basic usage - just provide the output directory from BoltzGen
-py calc_ipsae.py <output_dir>
+python calc_ipsae.py <output_dir>
 
 # Example with actual path
-py calc_ipsae.py test
+python calc_ipsae.py test
 
 # Custom cutoffs (default: 15 Angstroms for both)
-py calc_ipsae.py test --pae_cutoff 12 --dist_cutoff 12
+python calc_ipsae.py test --pae_cutoff 12 --dist_cutoff 12
 
 ================================================================================
 """
