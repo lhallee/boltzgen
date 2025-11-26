@@ -6,14 +6,7 @@ To test (design 2 potential nipah glycoprotein G binders)
 git clone https://github.com/lhallee/boltzgen.git
 cd boltzgen
 sudo docker build -t boltzgen .
-sudo docker run --user root --rm --gpus all --ipc=host \
-  -v "$PWD:/workdir" \
-  -v "$PWD/cache:/cache" \
-  -v "$PWD/example:/example" \
-  boltzgen run /example/nipah_test/nipah.yaml \
-  --output /workdir/test \
-  --protocol protein-anything \
-  --num_designs 32
+sudo docker run --user root --rm --gpus all --ipc=host -v "$PWD:/workdir" -v "$PWD/cache:/cache" -v "$PWD/example:/example" boltzgen run /example/nipah_test/nipah.yaml --output /workdir/test --protocol protein-anything --num_designs 32
 ```
 
 If not on linux, add `--use_kernals false`

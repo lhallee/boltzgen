@@ -56,27 +56,26 @@ RUN pip install --upgrade pip setuptools && \
 COPY . .
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Single persistent host volume (/workspace) for *all* artefacts & caches
-# Bind-mount it when you run the container:  -v ${PWD}:/workspace
+# Single persistent host volume (/workdir) for *all* artefacts & caches
+# Bind-mount it when you run the container:  -v ${PWD}:/workdir
 # ──────────────────────────────────────────────────────────────────────────────
-ENV PROJECT_ROOT=/workspace \
+ENV PROJECT_ROOT=/workdir \
     PYTHONPATH=/app \
-    CHAI_DOWNLOADS_DIR=/workspace/models/chai1 \
     HF_HUB_ENABLE_HF_TRANSFER=1 \
     DISABLE_PANDERA_IMPORT_WARNING=True \
-    HF_HOME=/workspace/.cache/huggingface \
-    TORCH_HOME=/workspace/.cache/torch \
-    XDG_CACHE_HOME=/workspace/.cache \
-    WANDB_DIR=/workspace/logs \
-    TQDM_CACHE=/workspace/.cache/tqdm
+    HF_HOME=/workdir/.cache/huggingface \
+    TORCH_HOME=/workdir/.cache/torch \
+    XDG_CACHE_HOME=/workdir/.cache \
+    WANDB_DIR=/workdir/logs \
+    TQDM_CACHE=/workdir/.cache/tqdm
 
 RUN mkdir -p \
-      /workspace/.cache/huggingface \
-      /workspace/.cache/torch \
-      /workspace/.cache/tqdm \
-      /workspace/logs \
-      /workspace/data \
-      /workspace/results
+      /workdir/.cache/huggingface \
+      /workdir/.cache/torch \
+      /workdir/.cache/tqdm \
+      /workdir/logs \
+      /workdir/data \
+      /workdir/results
 
 ARG DOWNLOAD_WEIGHTS=false
 RUN mkdir -p "${HF_HOME}" && \
@@ -85,11 +84,11 @@ RUN mkdir -p "${HF_HOME}" && \
     fi
 
 # Declare the volume so other developers know it's intended to persist
-VOLUME ["/workspace"]
+VOLUME ["/workdir"]
 
 # Set boltzgen as the entrypoint so users can run: docker run boltzgen run config.yaml ...
 # This makes "run config.yaml" become "boltzgen run config.yaml"
-ENTRYPOINT ["boltzgen"]
+#ENTRYPOINT ["boltzgen"]
 
 # Default to showing help if no subcommand is provided
 CMD ["--help"]
