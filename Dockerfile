@@ -87,5 +87,9 @@ RUN mkdir -p "${HF_HOME}" && \
 # Declare the volume so other developers know it's intended to persist
 VOLUME ["/workspace"]
 
-# 8️⃣  Default command – override in `docker run … python design_proteins.py`
-CMD ["bash"]
+# Set boltzgen as the entrypoint so users can run: docker run boltzgen run config.yaml ...
+# This makes "run config.yaml" become "boltzgen run config.yaml"
+ENTRYPOINT ["boltzgen"]
+
+# Default to showing help if no subcommand is provided
+CMD ["--help"]
