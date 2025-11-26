@@ -56,26 +56,27 @@ RUN pip install --upgrade pip setuptools && \
 COPY . .
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Single persistent host volume (/workdir) for *all* artefacts & caches
-# Bind-mount it when you run the container:  -v ${PWD}:/workdir
+# Single persistent host volume (/workspace) for *all* artefacts & caches
+# Bind-mount it when you run the container:  -v ${PWD}:/workspace
 # ──────────────────────────────────────────────────────────────────────────────
-ENV PROJECT_ROOT=/workdir \
+ENV PROJECT_ROOT=/workspace \
     PYTHONPATH=/app \
+    CHAI_DOWNLOADS_DIR=/workspace/models/chai1 \
     HF_HUB_ENABLE_HF_TRANSFER=1 \
     DISABLE_PANDERA_IMPORT_WARNING=True \
-    HF_HOME=/workdir/.cache/huggingface \
-    TORCH_HOME=/workdir/.cache/torch \
-    XDG_CACHE_HOME=/workdir/.cache \
-    WANDB_DIR=/workdir/logs \
-    TQDM_CACHE=/workdir/.cache/tqdm
+    HF_HOME=/workspace/.cache/huggingface \
+    TORCH_HOME=/workspace/.cache/torch \
+    XDG_CACHE_HOME=/workspace/.cache \
+    WANDB_DIR=/workspace/logs \
+    TQDM_CACHE=/workspace/.cache/tqdm
 
 RUN mkdir -p \
-      /workdir/.cache/huggingface \
-      /workdir/.cache/torch \
-      /workdir/.cache/tqdm \
-      /workdir/logs \
-      /workdir/data \
-      /workdir/results
+      /workspace/.cache/huggingface \
+      /workspace/.cache/torch \
+      /workspace/.cache/tqdm \
+      /workspace/logs \
+      /workspace/data \
+      /workspace/results
 
 ARG DOWNLOAD_WEIGHTS=false
 RUN mkdir -p "${HF_HOME}" && \
@@ -84,11 +85,7 @@ RUN mkdir -p "${HF_HOME}" && \
     fi
 
 # Declare the volume so other developers know it's intended to persist
-VOLUME ["/workdir"]
+VOLUME ["/workspace"]
 
-# Set boltzgen as the entrypoint so users can run: docker run boltzgen run config.yaml ...
-# This makes "run config.yaml" become "boltzgen run config.yaml"
-ENTRYPOINT ["boltzgen"]
-
-# Default to showing help if no subcommand is provided
-CMD ["--help"]
+# 8️⃣  Default command – override in `docker run … python design_proteins.py`
+CMD ["bash"]
