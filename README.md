@@ -2,22 +2,28 @@
 
 
 To test (design 2 potential nipah glycoprotein G binders)
-```
+```bash
 git clone https://github.com/lhallee/boltzgen.git
 cd boltzgen
 sudo docker build -t boltzgen .
 sudo docker run --user root --rm --gpus all --ipc=host -v "$PWD:/workdir" -v "$PWD/cache:/cache" -v "$PWD/example:/example" boltzgen run /example/nipah_test/nipah.yaml --output /workdir/test --protocol protein-anything --num_designs 32
 ```
 
-If not on linux, add `--use_kernals false`
+If not on linux, add `--use_kernels false`
 
 For example
-```
+```bash
 docker run --rm --gpus all -v "C:/Users/lhall/Desktop/Research/boltzgen":/workdir -v "C:/Users/lhall/Desktop/Research/boltzgen/cache":/cache -v "C:/Users/lhall/Desktop/Research/boltzgen/example":/example \
   boltzgen run /example/vanilla_protein/1g13prot.yaml --output /workdir/test \
   --protocol protein-anything \
   --num_designs 2 \
-  --use_kernals false
+  --use_kernels false
+```
+
+For ipsae
+
+```bash
+sudo docker run --user root --ipc=host -v "$PWD:/workdir" --entrypoint bash python /workdir/calc_ipsae.py final_designs_dir /workdir/test/final_ranked_designs --output /workdir/test/final_ranked_designs/designs_ranked_by_ipsae.fasta
 ```
 
 <div align="center">

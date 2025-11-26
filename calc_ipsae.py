@@ -44,23 +44,20 @@ def calculate_ipsae(
     """
     # Try python first, then py (Windows)
     for python_cmd in ["python", "py"]:
-        try:
-            command = [
-                python_cmd,
-                "ipsae.py",
-                pae_file_path,
-                structure_file_path,
-                str(pae_cutoff),
-                str(dist_cutoff),
-            ]
-            result = subprocess.run(command, capture_output=True, text=True)
-            if result.returncode == 0:
-                break
-        except FileNotFoundError:
-            continue
-    else:
-        print(f"Error running ipsae.py for {structure_file_path}")
-        return float('inf')
+        for workdir in ["/workdir", "."]:
+            try:
+                command = [
+                    python_cmd,
+                    f"{workdir}/ipsae.py",
+                    pae_file_path,
+                    structure_file_path,
+                    str(pae_cutoff),
+                    str(dist_cutoff),
+                ]
+                result = subprocess.run(command, capture_output=True, text=True)
+            except Exception as e:
+                print(f"Error running ipsae.py for with command: {command}: {e}")
+                continue
 
     # Read results from the output file
     results_path = structure_file_path.replace('.cif', f'_{int(pae_cutoff)}_{int(dist_cutoff)}.txt')
@@ -285,10 +282,10 @@ def main():
         epilog=__doc__
     )
     parser.add_argument(
-        "final_designs_dir",
+        "--final_designs_dir",
         type=str,
         nargs='?',
-        default=None,
+        default='test/final_ranked_designs',
         help="Path to final_ranked_designs directory"
     )
     parser.add_argument(
@@ -307,7 +304,7 @@ def main():
         "--output",
         "-o",
         type=str,
-        default=None,
+        default='test/final_ranked_designs/designs_ranked_by_ipsae.fasta',
         help="Output FASTA file path (default: <final_designs_dir>/designs_ranked_by_ipsae.fasta)"
     )
     
