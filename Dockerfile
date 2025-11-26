@@ -35,22 +35,20 @@ RUN curl -fsSLO https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYT
 # Location of project code (inside image) – NOT shared with host
 WORKDIR /app
 
-# Copy requirements and project files first for layer caching
-COPY requirements.txt pyproject.toml ./
+# Copy project files first for layer caching
+COPY pyproject.toml ./
 COPY src/ ./src/
 
 # Install packages
 # Order is important
 # 1. Upgrade pip/setuptools
 # 2. Install this repo
-# 3. Install requirements.txt
-# 4. Force reinstall torch/torchvision with CUDA 12.8, so we have the most up to date version
-# 5. Force reinstall numpy, numpy > 2.0 fails with scipy and some other packages, so we manually revert to 1.26.4
+# 3. Reinstall torch/torchvision with CUDA 12.8, so we have the most up to date version
+# 4. Reinstall numpy, numpy > 2.0 fails with scipy and some other packages, so we manually revert to 1.26.4
 RUN pip install --upgrade pip setuptools && \
     pip install --no-cache-dir -e /app && \
-    pip install -r requirements.txt && \
-    pip install --force-reinstall torch torchvision --index-url https://download.pytorch.org/whl/cu128 -U && \
-    pip install --force-reinstall numpy==1.26.4
+    pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128 -U && \
+    pip install numpy==1.26.4
 
 # Copy the rest of the source (examples, tests, etc.)
 COPY . .

@@ -3,6 +3,7 @@
 # https://www.biorxiv.org/content/10.1101/2025.02.10.637595v1
 
 # Slightly modifed to produce output that can be more easily read with pandas
+# From https://github.com/adaptyvbio/nipah_ipsae_pipeline
 
 # Also calculates:
 #    pDockQ: Bryant, Pozotti, and Eloffson. https://www.nature.com/articles/s41467-022-28865-w
